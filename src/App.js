@@ -19,20 +19,31 @@ class App extends Component {
         date: new Date(2020, 3, 21),
         message: 'Olá, tudo bem sim!!'
       },
-    ]
+    ],
+    newComment: {
+      name: '',
+      email: '',
+      message: ''
+    }
   }
 
-  addComment = () => {
+  addComment = (event) => {
 
-    const newComment = {
-      name: 'Pedro',
-      email: 'pedro@mail.com',
-      date: new Date(),
-      message: 'Olá Pessoal!!'
-    }
+    event.preventDefault();
 
-    this.setState({comments: [...this.state.comments, newComment]})
+    const newComment = {...this.state.newComment, date: new Date()}
 
+    this.setState({
+      comments: [...this.state.comments, newComment],
+      newComment: {name: '', email:'', message:''}
+    })
+  }
+
+
+  handler = (event) => {
+    const value = event.target.value;
+    const name = event.target.name;
+    this.setState({newComment: {...this.state.newComment, [name]:value}})
   }
 
   render() {
@@ -51,7 +62,33 @@ class App extends Component {
         </Comment>)
         })}
 
-        <button onClick={this.addComment}>Adicionar um comentário</button>
+        <form method="post" onSubmit={this.addComment}>
+          <h2>Adicionar Comentários</h2>
+          <div>
+            <input 
+            type="text" 
+            name="name" 
+            value={this.state.newComment.name}
+            onChange={this.handler}
+            placeholder='Digite seu nome'/>
+          </div>
+          <div>
+            <input 
+            type="email" 
+            name="email"
+            value={this.state.newComment.email}
+            onChange={this.handler}
+            placeholder='Digite seu email'/>
+          </div>
+          <div>
+            <textarea 
+            name="message"
+            value={this.state.newComment.message}
+            onChange={this.handler}
+            rows="4"/>
+          </div>
+          <button type="submit">Adicionar comentário</button>
+        </form>
       </div>
     );
   }
